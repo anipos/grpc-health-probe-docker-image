@@ -1,0 +1,32 @@
+name: Build and push grpc-health-probe docker image
+
+on:
+  push:
+  schedule:
+    - cron: "0 1 * * *"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout grpc-ecosystem/grpc-health-probe master
+        uses: actions/checkout@v2
+        with:
+          repository: grpc-ecosystem/grpc-health-probe
+          ref: master
+      - name: Login to github docker registry
+        run: docker login -u $USER -p $TOKEN
+        env:
+          USER: ${{ secrets.DOCKER_HUB_USERNAME }}
+          TOKEN: ${{ secrets.DOCKER_HUB_TOKEN }}
+      - name: Build docker image
+        run: |
+          docker build -t grpc-health-probe .
+      - name: Tag docker images
+        run: |
+          docker tag grpc-health-probe anipos/grpc-health-probe:latest
+          docker tag grpc-health-probe anipos/grpc-health-probe:$(git rev-parse HEAD)
+      - name: Push docker images
+        run: |
+          docker push anipos/grpc-health-probe:latest
+          docker push anipos/grpc-health-probe:$(git rev-parse HEAD)
