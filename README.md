@@ -1,3 +1,7 @@
+This image is deprecated. Use the Kubernetes builtin grpc health probing.
+
+https://kubernetes.io/blog/2022/05/13/grpc-probes-now-in-beta/
+
 # grpc-health-probe-docker-image
 
 Docker image of https://github.com/grpc-ecosystem/grpc-health-probe. The image
